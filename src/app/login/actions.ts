@@ -14,7 +14,10 @@ export async function login(formData: FormData) {
     });
 
     if (error) {
-        return { error: error.message };
+        console.error("Login error:", error.message);
+        // In a real app we'd return state, but for simple form action compatibility we'll just redirect or throw
+        // To match the type, we must return void or redirect.
+        redirect("/login?error=" + encodeURIComponent(error.message));
     }
 
     redirect("/");
@@ -38,7 +41,8 @@ export async function signup(formData: FormData) {
     });
 
     if (error) {
-        return { error: error.message };
+        console.error("Signup error:", error.message);
+        redirect("/login?error=" + encodeURIComponent(error.message));
     }
 
     redirect("/");

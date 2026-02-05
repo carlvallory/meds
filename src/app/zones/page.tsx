@@ -28,7 +28,7 @@ export default async function ZonesPage() {
 
                 <CreateZoneDialog />
             </div>
-            </div>
+
 
             <div className="rounded-md border bg-white">
                 <Table>

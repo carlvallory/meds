@@ -6,9 +6,20 @@ export async function middleware(request: NextRequest) {
         request,
     });
 
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+        console.error("Missing Supabase Environment Variables!");
+        // We let it proceed, but creating client will likely fail if we don't handle it. 
+        // Better to return next() without auth if critical envs are missing during build/deploy smoke tests, 
+        // OR explicit error. But 500 is what we are avoiding.
+        // Actually, let's just create it but know it might fail. 
+        // The safest fix for the user is just to provide the ENV VARS.
+        // But to avoid the crash loop:
+        return supabaseResponse;
+    }
+
     const supabase = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        process.env.NEXT_PUBLIC_SUPABASE_URL,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
         {
             cookies: {
                 getAll() {

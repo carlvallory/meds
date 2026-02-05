@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { LogOut, User } from "lucide-react";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Toaster } from "@/components/ui/sonner";
 
 export default async function DashboardLayout({
     children,
@@ -68,11 +69,17 @@ export default async function DashboardLayout({
                     <span className="font-bold">Inicio</span>
                 </Link>
                 {userRole === 'captain' || userRole === 'admin' ? (
-                    <Link href="/zones" className="flex flex-col items-center text-xs text-gray-500">
-                        <span>Zonas</span>
-                    </Link>
+                    <>
+                        <Link href="/zones" className="flex flex-col items-center text-xs text-gray-500">
+                            <span>Zonas</span>
+                        </Link>
+                        <Link href="/captain" className="flex flex-col items-center text-xs text-blue-600 font-bold">
+                            <span>Tablero</span>
+                        </Link>
+                    </>
                 ) : null}
             </nav>
+            <Toaster richColors position="top-center" />
         </div>
     );
 }

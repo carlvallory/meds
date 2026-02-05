@@ -8,21 +8,8 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { PlusCircle } from "lucide-react";
-import { createZone } from "./actions";
 import DashboardLayout from "../layout-dashboard";
-import { Switch } from "@/components/ui/switch"; // Assuming we install switch
+import { CreateZoneDialog } from "./create-zone-dialog";
 
 export default async function ZonesPage() {
     const supabase = await createClient();
@@ -39,37 +26,8 @@ export default async function ZonesPage() {
                     <p className="text-muted-foreground">Administra las zonas de mediación</p>
                 </div>
 
-                <Dialog>
-                    <DialogTrigger asChild>
-                        <Button>
-                            <PlusCircle className="mr-2 h-4 w-4" />
-                            Nueva Zona
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle>Crear Zona</DialogTitle>
-                            <DialogDescription>
-                                Añade una nueva ubicación para asignar mediadores.
-                            </DialogDescription>
-                        </DialogHeader>
-                        <form action={createZone}>
-                            <div className="grid gap-4 py-4">
-                                <div className="grid gap-2">
-                                    <Label htmlFor="name">Nombre</Label>
-                                    <Input id="name" name="name" placeholder="Ej: Entrada Principal" required />
-                                </div>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="description">Descripción (Opcional)</Label>
-                                    <Input id="description" name="description" placeholder="Ubicada en el hall central" />
-                                </div>
-                            </div>
-                            <DialogFooter>
-                                <Button type="submit">Guardar Zona</Button>
-                            </DialogFooter>
-                        </form>
-                    </DialogContent>
-                </Dialog>
+                <CreateZoneDialog />
+            </div>
             </div>
 
             <div className="rounded-md border bg-white">
@@ -110,6 +68,6 @@ export default async function ZonesPage() {
                     </TableBody>
                 </Table>
             </div>
-        </DashboardLayout>
+        </DashboardLayout >
     );
 }

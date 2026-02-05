@@ -30,6 +30,9 @@ export async function signup(formData: FormData) {
 
     const supabase = await createClient();
 
+    const headersList = await import("next/headers").then(mod => mod.headers());
+    const origin = process.env.NEXT_PUBLIC_SITE_URL || headersList.get("origin") || "https://muci-meds.vercel.app";
+
     const { error } = await supabase.auth.signUp({
         email,
         password,
@@ -37,6 +40,7 @@ export async function signup(formData: FormData) {
             data: {
                 full_name: fullName,
             },
+            emailRedirectTo: `${origin}/auth/callback`,
         },
     });
 

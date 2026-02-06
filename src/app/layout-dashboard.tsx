@@ -76,6 +76,9 @@ export default async function DashboardLayout({
                         <Link href="/captain" className="flex flex-col items-center text-xs text-blue-600 font-bold">
                             <span>Tablero</span>
                         </Link>
+                        <Link href="/reasons" className="flex flex-col items-center text-xs text-blue-600 font-bold">
+                            <span>Motivos</span>
+                        </Link>
                     </>
                 ) : null}
             </nav>

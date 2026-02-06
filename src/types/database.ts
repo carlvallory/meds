@@ -1,4 +1,4 @@
-export type AppRole = 'admin' | 'captain' | 'mediator';
+export type AppRole = 'admin' | 'captain' | 'mediator' | 'host';
 
 export interface Zone {
     id: string;

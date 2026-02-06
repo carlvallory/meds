@@ -33,7 +33,7 @@ export default async function Home() {
     .eq("id", user.id)
     .single();
 
-  const zoneName = userData?.zones?.name || "Sin Asignar";
+  const zoneName = userData?.role === 'host' ? "Host de Piso (Sin Zona)" : (userData?.zones?.name || "Sin Asignar");
 
   // 4. Get Reasons for Unavailable
   const reasons = await getReasons();

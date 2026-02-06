@@ -11,16 +11,16 @@ importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compa
 // To keep it dynamic, we'll try to rely on default instance if possible, but usually keys are needed.
 
 // Placeholder: User must fill this after creating project
-const firebaseConfig = {
-    apiKey: "AIzaSyBIQ1MS7z9GwyjLCcUQKTkZoZ3bMPQ1C7s",
-    authDomain: "mediator-pwa.firebaseapp.com",
-    projectId: "mediator-pwa",
-    storageBucket: "mediator-pwa.firebasestorage.app",
-    messagingSenderId: "718606804737",
-    appId: "1:718606804737:web:25d6f85013d780c7219d00"
-};
+// Parse config from URL query parameters
+const urlParams = new URLSearchParams(location.search);
+const firebaseConfig = Object.fromEntries(urlParams);
 
-firebase.initializeApp(firebaseConfig);
+if (Object.keys(firebaseConfig).length === 0) {
+    // Only warn in development, but this file is public so avoid secrets anyway
+    console.log('Firebase Config missing in SW URL. Initializing with empty or waiting for manual init.');
+} else {
+    firebase.initializeApp(firebaseConfig);
+}
 
 const messaging = firebase.messaging();
 

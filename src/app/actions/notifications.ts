@@ -20,7 +20,7 @@ export async function saveFcmToken(token: string, platform: 'web' | 'android' | 
     return { success: true };
 }
 
-export async function sendPushToRole(role: 'captain' | 'admin' | 'mediator', title: string, body: string, data?: Record<string, string>) {
+export async function sendPushToRole(roles: ('captain' | 'admin' | 'mediator' | 'host')[], title: string, body: string, data?: Record<string, string>) {
     // 1. Get Users with Role
     // Note: This requires filtering users by role. Since 'role' is in public users table:
     const supabase = await createClient();
@@ -29,7 +29,7 @@ export async function sendPushToRole(role: 'captain' | 'admin' | 'mediator', tit
     const { data: users, error: userError } = await supabase
         .from("users")
         .select("id")
-        .eq("role", role);
+        .in("role", roles);
 
     if (userError || !users?.length) return { error: "No users found or error fetching users" };
 

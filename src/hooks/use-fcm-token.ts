@@ -36,7 +36,11 @@ export default function useFcmToken() {
                             appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID!,
                         }).toString();
 
-                        registration = await navigator.serviceWorker.register(`/firebase-messaging-sw.js?${firebaseConfigUrl}`);
+                        // Register the SW
+                        await navigator.serviceWorker.register(`/firebase-messaging-sw.js?${firebaseConfigUrl}`);
+
+                        // Wait for it to be ready/active before getting token
+                        registration = await navigator.serviceWorker.ready;
                     }
 
                     const currentToken = await getToken(messaging, {

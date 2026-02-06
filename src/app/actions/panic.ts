@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { sendPushToRole } from "./notifications";
 
 export async function triggerPanic() {
     const supabase = await createClient();
@@ -24,20 +25,28 @@ export async function triggerPanic() {
 
     if (error) return { error: error.message };
 
-    // Here we would trigger FCM (Firebase Cloud Messaging)
-    // await sendPushNotificationToTopic("captains", "ALERTA: Mediador ha activado botón de pánico!");
+    // Trigger FCM
+    // Notify all captains
+    await sendPushToRole("captain", "🚨 ALERTA DE PÁNICO 🚨", "Un mediador ha solicitado ayuda urgente.", {
+        alertId: data.id,
+        zoneId: userData?.assigned_zone_id || "unknown"
+    });
 
     return { success: true, alertId: data.id };
 }
 
 export async function resolvePanic(alertId: string) {
     const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
 
-    // Allow user to resolve their own panic (RLS must allow UPDATE for own rows)
+    if (!user) return { error: "No autorizado" };
+
+    // Resolve ALL active alerts for this user (cleans up any backlog from multiple clicks)
     const { error } = await supabase
         .from("panic_alerts")
         .update({ resolved_at: new Date().toISOString() })
-        .eq("id", alertId);
+        .eq("user_id", user.id)
+        .is("resolved_at", null);
 
     if (error) return { error: error.message };
 

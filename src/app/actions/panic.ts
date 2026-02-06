@@ -27,10 +27,17 @@ export async function triggerPanic() {
 
     // Trigger FCM
     // Notify EVERYONE (captains, admins, mediators, hosts)
-    await sendPushToRole(["captain", "admin", "mediator", "host"], "🚨 ALERTA DE PÁNICO 🚨", "Un mediador ha solicitado ayuda urgente.", {
-        alertId: data.id,
-        zoneId: userData?.assigned_zone_id || "unknown"
-    });
+    const notificationResult = await sendPushToRole(
+        ["captain", "admin", "mediator", "host"],
+        "🚨 ALERTA DE PÁNICO 🚨",
+        "Un mediador ha solicitado ayuda urgente.",
+        {
+            alertId: data.id,
+            zoneId: userData?.assigned_zone_id || "unknown"
+        }
+    );
+
+    console.log("Panic notification result:", notificationResult);
 
     return { success: true, alertId: data.id };
 }

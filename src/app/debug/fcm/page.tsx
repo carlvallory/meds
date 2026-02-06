@@ -20,8 +20,8 @@ export default async function DebugFCM() {
     const hasServiceRoleKey = !!process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     // Initialize Admin Client if key exists
-    let allUsers = [];
-    let allTokens = [];
+    let allUsers: any[] = [];
+    let allTokens: any[] = [];
     if (hasServiceRoleKey && process.env.NEXT_PUBLIC_SUPABASE_URL) {
         const supabaseAdmin = createSupabaseClient(
             process.env.NEXT_PUBLIC_SUPABASE_URL,

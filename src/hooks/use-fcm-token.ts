@@ -24,7 +24,8 @@ export default function useFcmToken() {
                 setPermission(permission);
 
                 if (permission === "granted") {
-                    // Register SW with query params to pass config without hardcoding secrets in public file
+                    let registration;
+
                     if ("serviceWorker" in navigator) {
                         const firebaseConfigUrl = new URLSearchParams({
                             apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY!,
@@ -35,11 +36,12 @@ export default function useFcmToken() {
                             appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID!,
                         }).toString();
 
-                        await navigator.serviceWorker.register(`/firebase-messaging-sw.js?${firebaseConfigUrl}`);
+                        registration = await navigator.serviceWorker.register(`/firebase-messaging-sw.js?${firebaseConfigUrl}`);
                     }
 
                     const currentToken = await getToken(messaging, {
                         vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
+                        serviceWorkerRegistration: registration,
                     });
 
                     if (currentToken) {

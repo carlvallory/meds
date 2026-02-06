@@ -16,24 +16,28 @@ const urlParams = new URLSearchParams(location.search);
 const firebaseConfig = Object.fromEntries(urlParams);
 
 if (Object.keys(firebaseConfig).length === 0) {
-    // Only warn in development, but this file is public so avoid secrets anyway
     console.log('Firebase Config missing in SW URL. Initializing with empty or waiting for manual init.');
 } else {
     firebase.initializeApp(firebaseConfig);
+
+    // Only access messaging if app is initialized
+    try {
+        const messaging = firebase.messaging();
+
+        messaging.onBackgroundMessage(function (payload) {
+            console.log('[firebase-messaging-sw.js] Received background message ', payload);
+
+            const notificationTitle = payload.notification.title;
+            const notificationOptions = {
+                body: payload.notification.body,
+                icon: '/icon-192x192.png',
+                badge: '/badge.png', // Optional
+                data: payload.data
+            };
+
+            self.registration.showNotification(notificationTitle, notificationOptions);
+        });
+    } catch (e) {
+        console.error("Failed to initialize Firebase Messaging in SW:", e);
+    }
 }
-
-const messaging = firebase.messaging();
-
-messaging.onBackgroundMessage(function (payload) {
-    console.log('[firebase-messaging-sw.js] Received background message ', payload);
-
-    const notificationTitle = payload.notification.title;
-    const notificationOptions = {
-        body: payload.notification.body,
-        icon: '/icon-192x192.png',
-        badge: '/badge.png', // Optional
-        data: payload.data
-    };
-
-    self.registration.showNotification(notificationTitle, notificationOptions);
-});
